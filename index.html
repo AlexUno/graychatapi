@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+      }
+      .container {
+        text-align: center;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+      img {
+        margin-top: 20px;
+        border: 1px solid #ddd;
+        padding: 10px;
+        background: #fff;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <input id="client-id" type="text" placeholder="Client Id" />
+      <button id="btn-qr-code">Get QR Code</button>
+      <div>
+        <img
+          id="qr-code"
+          src=""
+          alt="Qr Code will appear here"
+          style="display: none"
+        />
+      </div>
+    </div>
+
+    <script>
+      const $clientId = document.querySelector("#client-id");
+      const $imgQrCode = document.querySelector("#qr-code");
+      const $btnQrCode = document.querySelector("#btn-qr-code");
+
+      async function getQRCode() {
+        const clientId = $clientId.value ? $clientId.value : 0;
+
+        try {
+          const response = await fetch(
+            "http://127.0.0.1:3000/api/qr/" + clientId
+          );
+          const data = await response.json();
+
+          if (response.ok) {
+            $clientId.value = data["clientId"];
+            if (data["success"]) {
+              $imgQrCode.src = data["qr"];
+              $imgQrCode.style.display = "block";
+            }
+          } else {
+            alert("Filed qr code. Please try again");
+          }
+        } catch (e) {
+          console.error("Error fetching QR code:", e);
+          alert("Error fetching QR code. Please try again.");
+        }
+      }
+
+      $btnQrCode.addEventListener("click", function () {
+        getQRCode();
+      });
+    </script>
+  </body>
+</html>
