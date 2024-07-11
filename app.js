@@ -10,9 +10,9 @@ app.use(cors());
 
 app.use("/api", whatsappRouter);
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-const server = app.listen(PORT, "127.0.0.1", () => {
+const server = app.listen(PORT, "0.0.0.0", () => {
   const { port, address } = server.address();
 
   console.log(`Server has been started on http://${address}:${port}`);
